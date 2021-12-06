@@ -1,14 +1,35 @@
-/*
-    Jesse Wood
-    Pthreads & Semaphores Practice
-    Created: 10/10/2021
-*/
+#include <pthread.h>
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <errno.h>
+#include <ctype.h>
 
-// libraries
-#include "stdio.h"
+void * threadFunc(void * arg) {
+        printf("Thread function :: start\n");
+        sleep(10);
+        printf("Thread function :: end\n");
+        return NULL;
+}
 
-int main (char *argv[], int *argc) {
-    printf("%s", "Hello world");
+int main(int argc, char *argv[]) {
 
-    return 0;
+        pthread_t threadId;
+        int err = pthread_create(&threadId, NULL, &threadFunc, NULL);
+
+        if (err) {
+                printf("Thread creation failure\n");
+                return err;
+        } else {
+                printf("Thread created with ID: %d\n", (int) threadId);
+        }
+
+        err = pthread_join(threadId, NULL);
+        if (err) {
+                printf("Thread join failure\n");
+                return err;
+        }
+
+        return 0;
 }
